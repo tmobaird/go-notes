@@ -1,0 +1,10 @@
+{{template "layout.html" .}}
+{{define "title"}}Index{{end}}
+{{define "content"}}
+{{range $note := .Notes}}
+<p>
+  {{$note.Title}}
+  <a href="/notes/{{$note.ID}}">View</a>
+</p>
+{{end}}
+{{end}}

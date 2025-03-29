@@ -1,0 +1,9 @@
+{{template "layout.html" .}}
+{{define "title"}}Index{{end}}
+{{define "content"}}
+<h3>
+  {{.Note.Title}}
+</h3>
+<p>{{.Note.Body}}</p>
+<a class="button" href="/notes/{{.Note.ID}}/edit">Edit</a>
+{{end}}
