@@ -1,0 +1,11 @@
+{{template "layout.html" .}}
+{{define "title"}}New Note{{end}}
+{{define "content"}}
+<h1>New note</h1>
+<form action="/notes" method="post">
+  <label for="title">Title</label>
+  <input type="text" name="title" id="title"></input>
+  <input type="submit"></input>
+</form>
+<a href="/notes">Cancel</a>
+{{end}}

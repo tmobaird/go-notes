@@ -10,7 +10,7 @@ import (
 type Note struct {
 	ID    int64
 	Title string
-	Body  string
+	Body  sql.NullString
 }
 
 func GetNotes() ([]Note, error) {
@@ -56,8 +56,11 @@ func CreateNote(note Note) (Note, error) {
 	pool.SetMaxIdleConns(3)
 	pool.SetMaxOpenConns(3)
 
-	result, err := pool.Exec(fmt.Sprintf("INSERT INTO notes (title body) VALUES (%s, %s)", note.Title, note.Body))
-	id, _ := result.LastInsertId()
+	result, err := pool.Exec(fmt.Sprintf("INSERT INTO notes (title) VALUES (\"%s\");", note.Title))
+	if err != nil {
+		return Note{}, err
+	}
+	id, err := result.LastInsertId()
 	note.ID = id
 
 	if err != nil {

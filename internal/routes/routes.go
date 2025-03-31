@@ -13,6 +13,7 @@ type Route struct {
 func Routes() []Route {
 	return []Route{
 		{path: "GET /notes", handler: getNotes},
+		{path: "GET /notes/new", handler: newNote},
 		{path: "POST /notes", handler: createNotes},
 		{path: "GET /notes/{id}", handler: showNote},
 	}

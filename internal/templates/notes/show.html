@@ -4,6 +4,7 @@
 <h3>
   {{.Note.Title}}
 </h3>
-<p>{{.Note.Body}}</p>
 <a class="button" href="/notes/{{.Note.ID}}/edit">Edit</a>
+<p>{{.Note.Body.String}}</p>
+<a class="button" href="/notes">Back to Notes</a>
 {{end}}

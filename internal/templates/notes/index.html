@@ -1,6 +1,7 @@
 {{template "layout.html" .}}
 {{define "title"}}Index{{end}}
 {{define "content"}}
+<a href="/notes/new">New</a>
 {{range $note := .Notes}}
 <p>
   {{$note.Title}}

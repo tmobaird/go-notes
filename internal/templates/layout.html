@@ -35,6 +35,9 @@
 <body>
   <h1>Notetaking app</h1>
   <main>
+    {{ if .Error }}
+    <p>An error occurred</p>
+    {{end}}
     {{ block "content" . }}
     {{ end }}
   </main>

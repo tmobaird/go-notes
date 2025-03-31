@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"database/sql"
 	"fmt"
 	"html/template"
 	"log"
@@ -13,6 +14,7 @@ import (
 type ViewContext struct {
 	Notes  []models.Note
 	Note   models.Note
+	Error  error
 	Offset int
 }
 
@@ -41,17 +43,28 @@ func getNotes(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func newNote(w http.ResponseWriter, r *http.Request) {
+	err := renderView(w, "new.html", ViewContext{})
+	if err != nil {
+		log.Printf("Error", err.Error())
+	}
+}
+
 func createNotes(w http.ResponseWriter, r *http.Request) {
-	note := models.Note{ID: -1, Title: "Another New Note", Body: "This is a test"}
-	note, err := models.CreateNote(note)
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Failed to save", http.StatusInternalServerError)
+	}
+	note := models.Note{Title: r.FormValue("title"), Body: sql.NullString{}}
+	note, err = models.CreateNote(note)
 
 	if err != nil {
 		http.Error(w, "Failed to save", http.StatusUnprocessableEntity)
+		log.Println(err.Error())
 		return
-
 	}
 
-	err = renderView(w, "getNotes.html", ViewContext{})
+	err = renderView(w, "show.html", ViewContext{Note: note})
 	if err != nil {
 		http.Error(w, "Not Found", http.StatusInternalServerError)
 	}
