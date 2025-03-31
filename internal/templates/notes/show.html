@@ -1,10 +1,38 @@
 {{template "layout.html" .}}
 {{define "title"}}Index{{end}}
 {{define "content"}}
-<h3>
-  {{.Note.Title}}
-</h3>
-<a class="button" href="/notes/{{.Note.ID}}/edit">Edit</a>
-<p>{{.Note.Body.String}}</p>
-<a class="button" href="/notes">Back to Notes</a>
+<style>
+  .card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 70vw;
+    margin: 20px auto;
+    box-sizing: border-box;
+  }
+
+  .card-heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+</style>
+<div class="card">
+  <div class="card-heading">
+    <h1>
+      {{.Note.Title}}
+    </h1>
+    <a class="button" href="/notes/{{.Note.ID}}/edit">Edit</a>
+  </div>
+  <div id="note-body">{{.Note.Body.String -}}</div>
+  <a href="/notes">Back to Notes</a>
+</div>
+<script>
+  var converter = new showdown.Converter();
+  const body = document.querySelector("#note-body")
+  var md = body.innerText.replace(/<br>/g, "\n")
+  var html = converter.makeHtml(md);
+  body.innerHTML = html
+</script>
 {{end}}

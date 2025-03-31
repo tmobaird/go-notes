@@ -92,3 +92,27 @@ func GetNote(id string) (Note, error) {
 	}
 	return note, nil
 }
+
+func UpdateNote(note Note) (Note, error) {
+	dsn := "file:///Users/tmobaird/Projects/markdown-notes/notes.sqlite3"
+	pool, err := sql.Open("sqlite", dsn)
+	if err != nil {
+		return Note{}, err
+	}
+	defer pool.Close()
+
+	pool.SetConnMaxLifetime(0)
+	pool.SetMaxIdleConns(3)
+	pool.SetMaxOpenConns(3)
+
+	_, err = pool.Exec(fmt.Sprintf("UPDATE notes SET title = \"%s\", body = \"%s\" WHERE id = %d;", note.Title, note.Body.String, note.ID))
+	if err != nil {
+		return Note{}, err
+	}
+
+	if err != nil {
+		return Note{}, err
+	}
+
+	return note, nil
+}

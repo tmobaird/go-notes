@@ -1,0 +1,180 @@
+{{template "layout.html" .}}
+{{define "title"}}New Note{{end}}
+{{define "content"}}
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+  }
+
+  .card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 70vw;
+    box-sizing: border-box;
+  }
+
+  label {
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s ease-in-out;
+    box-sizing: border-box;
+    /* Ensures padding is included in width */
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  input[type=submit] {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  input[type=submit]:hover {
+    background: #0056b3;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  .nav-link {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    border: 2px solid transparent;
+    background-color: #f0f0f0;
+    color: #333;
+    border-color: #ddd;
+  }
+
+  .nav-link.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+  }
+
+  .nav-link:hover {
+    opacity: 0.8;
+  }
+</style>
+<h1>Edit Note</h1>
+<form action="/notes/{{ .Note.ID }}" method="post" class="card">
+  <label for="title">Title</label>
+  <input type="text" name="title" id="title" value="{{ .Note.Title }}"></input>
+  <div style="display: flex; margin-bottom: 10px;">
+    <a href="#" id="edit" class="nav-link active">Edit</a>
+    <a href="#" id="preview" class="nav-link">Preview</a>
+  </div>
+  <textarea name="body">
+  {{ .Note.Body.String }}</textarea>
+  <div id="preview-area" class="hide"></div>
+  <input type="submit" value="Save"></input>
+  <a href="/notes">Cancel</a>
+</form>
+<script>
+  function getBodyInput() {
+    return document.querySelector("textarea[name='body']")
+  }
+
+  function getEditButton() {
+    return document.querySelector("#edit")
+  }
+
+  function getPreviewArea() {
+    return document.querySelector("#preview-area")
+  }
+
+  function getPreviewButton() {
+    return document.querySelector("#preview")
+  }
+
+  function setNavLinkClass(navlink, classList) {
+    navlink.classList = `nav-link ${classList}`
+  }
+
+  function resizeToValue() {
+    const bodyInput = getBodyInput()
+    const lines = bodyInput.value.split("\n").length
+    if (lines >= bodyInput.rows) {
+      bodyInput.rows = bodyInput.rows + (lines - bodyInput.rows + 1)
+    }
+  }
+
+  const bodyInput = getBodyInput()
+  bodyInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      resizeToValue()
+    }
+  })
+
+  window.addEventListener("DOMContentLoaded", function(_) {
+    console.log("WE HERE")
+    resizeToValue()
+  })
+
+  const edit = document.querySelector("#edit")
+  edit.addEventListener("click", function(e) {
+    const bodyInput = getBodyInput()
+    bodyInput.classList = ""
+    const previewArea = getPreviewArea()
+    previewArea.classList = "hide"
+
+    const editButton = getEditButton()
+    const previewButton = getPreviewButton()
+    setNavLinkClass(editButton, "active")
+    setNavLinkClass(previewButton, "")
+  })
+
+  const preview = document.querySelector("#preview")
+  preview.addEventListener("click", function(e) {
+    const bodyInput = getBodyInput()
+    const content = bodyInput.value
+    var converter = new showdown.Converter();
+    var md = content
+    var html = converter.makeHtml(md);
+    const previewArea = getPreviewArea()
+    previewArea.innerHTML = html
+    bodyInput.classList = "hide"
+    previewArea.classList = ""
+
+    const editButton = getEditButton()
+    const previewButton = getPreviewButton()
+    setNavLinkClass(editButton, "")
+    setNavLinkClass(previewButton, "active")
+  })
+</script>
+{{end}}

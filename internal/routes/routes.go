@@ -16,6 +16,8 @@ func Routes() []Route {
 		{path: "GET /notes/new", handler: newNote},
 		{path: "POST /notes", handler: createNotes},
 		{path: "GET /notes/{id}", handler: showNote},
+		{path: "GET /notes/{id}/edit", handler: editNote},
+		{path: "POST /notes/{id}", handler: updateNote},
 	}
 }
 

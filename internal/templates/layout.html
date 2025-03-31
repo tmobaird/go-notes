@@ -8,10 +8,11 @@
     {{ block "title" . }}Default Titles
     {{ end }}
   </title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js" integrity="sha512-LhccdVNGe2QMEfI3x4DVV3ckMRe36TfydKss6mJpdHjNFiV07dFpS2xzeZedptKZrwxfICJpez09iNioiSZ3hA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <style>
     body {
-      background-color: rgb(254, 246, 234);
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
     }
 
     .button {
@@ -33,7 +34,6 @@
 </head>
 
 <body>
-  <h1>Notetaking app</h1>
   <main>
     {{ if .Error }}
     <p>An error occurred</p>

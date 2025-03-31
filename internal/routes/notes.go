@@ -7,6 +7,8 @@ import (
 	"log"
 	"md-notes/internal/models"
 	"net/http"
+	"strconv"
+	"strings"
 
 	_ "modernc.org/sqlite"
 )
@@ -36,17 +38,16 @@ func getNotes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println(notes)
 	err = renderView(w, "index.html", ViewContext{Notes: notes})
 	if err != nil {
-		log.Printf("Error", err.Error())
+		log.Println("Error", err.Error())
 	}
 }
 
 func newNote(w http.ResponseWriter, r *http.Request) {
 	err := renderView(w, "new.html", ViewContext{})
 	if err != nil {
-		log.Printf("Error", err.Error())
+		log.Println("Error", err.Error())
 	}
 }
 
@@ -64,10 +65,7 @@ func createNotes(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = renderView(w, "show.html", ViewContext{Note: note})
-	if err != nil {
-		http.Error(w, "Not Found", http.StatusInternalServerError)
-	}
+	http.Redirect(w, r, fmt.Sprintf("/notes/%d", note.ID), http.StatusSeeOther)
 }
 
 func showNote(w http.ResponseWriter, r *http.Request) {
@@ -79,8 +77,44 @@ func showNote(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Not Found", http.StatusNotFound)
 	}
 
+	note.Body = sql.NullString{String: strings.ReplaceAll(note.Body.String, "\r\n", "<br>")}
 	err = renderView(w, "show.html", ViewContext{Note: note})
 	if err != nil {
 		http.Error(w, "Not Found", http.StatusInternalServerError)
 	}
+}
+
+func editNote(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+
+	note, err := models.GetNote(id)
+
+	if err != nil {
+		http.Error(w, "Not Found", http.StatusNotFound)
+	}
+
+	err = renderView(w, "edit.html", ViewContext{Note: note})
+	if err != nil {
+		http.Error(w, "Not Found", http.StatusInternalServerError)
+	}
+}
+
+func updateNote(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Failed to save", http.StatusInternalServerError)
+	}
+	intid, err := strconv.Atoi(id)
+	if err != nil {
+		http.Error(w, "Not Found", http.StatusNotFound)
+	}
+	note := models.Note{ID: int64(intid), Title: r.FormValue("title"), Body: sql.NullString{String: r.FormValue("body"), Valid: true}}
+	note, err = models.UpdateNote(note)
+
+	if err != nil {
+		http.Error(w, "Unprocessible Entity", http.StatusUnprocessableEntity)
+	}
+	http.Redirect(w, r, fmt.Sprintf("/notes/%d", note.ID), http.StatusSeeOther)
 }

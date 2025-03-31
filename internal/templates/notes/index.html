@@ -1,11 +1,63 @@
 {{template "layout.html" .}}
 {{define "title"}}Index{{end}}
 {{define "content"}}
-<a href="/notes/new">New</a>
-{{range $note := .Notes}}
-<p>
-  {{$note.Title}}
-  <a href="/notes/{{$note.ID}}">View</a>
-</p>
-{{end}}
+<style>
+  /* Container for the notes list */
+  body {
+    background-color: #f8f9fa;
+  }
+
+  .notes-container {
+    max-width: 70vw;
+    margin: 20px auto;
+    padding: 30px 20px 20px 20px;
+    background-color: white;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 70vw;
+    box-sizing: border-box;
+  }
+
+  /* Individual note item */
+  .note {
+    list-style-type: none;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #333;
+    border: 2px solid transparent;
+    transition: all 0.1s ease-in-out;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Hover effect */
+  .note:hover {
+    background-color: #e9ecef;
+    border-color: #007bff;
+  }
+
+  /* Active note (if you want to show selection) */
+  .note.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+  }
+</style>
+<div class="notes-container">
+  <a href="/notes/new" class="button" aria-label="New">+</a>
+  <ul>
+    {{range $note := .Notes}}
+    <li class="note">
+      <span>
+        {{$note.Title}}
+      </span>
+      <a href="/notes/{{$note.ID}}" class="button">View</a>
+    </li>
+    {{end}}
+  </ul>
+</div>
 {{end}}

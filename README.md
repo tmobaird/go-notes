@@ -1,11 +1,12 @@
 # Markdown Notes
 
-- [ ] Add middleware for logging requests
+- [x] Add middleware for logging requests
 - [x] Add index
-- [ ] Add new
-- [ ] Add show
-- [ ] Add create
-- [ ] Add edit
-- [ ] Add update
+- [x] Add new
+- [x] Add show
+- [x] Add create
+- [x] Add edit
+- [x] Add update
 - [ ] Add delete
-- [ ] Add database layer
+- [x] Add database layer
+- [x] posts rendering views instead of redirecting
