@@ -16,7 +16,7 @@ type Note struct {
 func GetNotes() ([]Note, error) {
 	notes := []Note{}
 
-	dsn := "file:///Users/tmobaird/Projects/markdown-notes/notes.sqlite3"
+	dsn := "notes.sqlite3"
 	pool, err := sql.Open("sqlite", dsn)
 	if err != nil {
 		return notes, err
@@ -45,7 +45,7 @@ func GetNotes() ([]Note, error) {
 }
 
 func CreateNote(note Note) (Note, error) {
-	dsn := "file:///Users/tmobaird/Projects/markdown-notes/notes.sqlite3"
+	dsn := "notes.sqlite3"
 	pool, err := sql.Open("sqlite", dsn)
 	if err != nil {
 		return Note{}, err
@@ -73,7 +73,7 @@ func CreateNote(note Note) (Note, error) {
 func GetNote(id string) (Note, error) {
 	note := Note{}
 
-	dsn := "file:///Users/tmobaird/Projects/markdown-notes/notes.sqlite3"
+	dsn := "notes.sqlite3"
 	pool, err := sql.Open("sqlite", dsn)
 	if err != nil {
 		return note, err
@@ -94,7 +94,7 @@ func GetNote(id string) (Note, error) {
 }
 
 func UpdateNote(note Note) (Note, error) {
-	dsn := "file:///Users/tmobaird/Projects/markdown-notes/notes.sqlite3"
+	dsn := "notes.sqlite3"
 	pool, err := sql.Open("sqlite", dsn)
 	if err != nil {
 		return Note{}, err
